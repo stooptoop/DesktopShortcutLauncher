@@ -4,6 +4,7 @@ namespace DesktopShortcutLauncher
 {
     internal interface ILauncherUseCase
     {
+        public Result<Empty> Initialize();
         public List<ShortcutDirectory> GetLauncherDataSource();
         public Result<Empty> LaunchApp(ShortcutListItem item);
     }
@@ -14,6 +15,11 @@ namespace DesktopShortcutLauncher
         private ILauncherRepository Repository { get; } = Repository;
 
         public LauncherInteractor() : this(new LauncherRepository()) { }
+
+        public Result<Empty> Initialize()
+        {
+            return Repository.LoadConfig();
+        }
 
         public List<ShortcutDirectory> GetLauncherDataSource()
         {

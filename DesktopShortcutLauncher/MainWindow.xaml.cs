@@ -21,16 +21,33 @@ namespace DesktopShortcutLauncher
             this.Closing += (sender, e) =>
             {
                 Environment.Exit(0);
-            };            
+            };
 
-            LoadShortcutFiles();
+            UpdateWindowHeight();
+            InitializeLauncherApp();
+        }
+
+        private void InitializeLauncherApp()
+        {
+            try
+            {
+                UseCase.Initialize().Get();
+            }
+            catch (Exception ex)
+            {
+                ShowAlert($"Failed to initialize app: {ex.Message}");
+            }
+
+            SetLauncherDataSource(
+                UseCase.GetLauncherDataSource()
+            );
         }
 
         private void LoadShortcutFiles()
         {
             var srcList = UseCase.GetLauncherDataSource();
             SetLauncherDataSource(srcList);
-            UpdateWindowHeight();
+            
         }
 
         private void SetLauncherDataSource(List<ShortcutDirectory> source)
@@ -77,12 +94,17 @@ namespace DesktopShortcutLauncher
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show(this, "Failed to start shortcut: " + ex.Message);
+                            ShowAlert($"Failed to start shortcut: {ex.Message}");
                         }
                         listView.UnselectAll();
                     }
                 };
             }
+        }
+
+        private void ShowAlert(string message)
+        {
+            MessageBox.Show(this, message);
         }
     }
 }

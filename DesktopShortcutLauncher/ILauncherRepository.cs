@@ -5,17 +5,35 @@ namespace DesktopShortcutLauncher
 {
     public interface ILauncherRepository
     {
+        public Result<Empty> LoadConfig();
         public List<ShortcutDirectory> GetShortcutDirectories();
     }
 
-    public class LauncherRepository : ILauncherRepository
+    public class LauncherRepository(
+        IConfigLoader LauncherConfigLoader
+    ) : ILauncherRepository
     {
-        public LauncherRepository() { }
+        private IConfigLoader LauncherConfigLoader = LauncherConfigLoader;
+        private Config LauncherConfig = ConfigLoader.DEFAULT_CONFIG;
+
+        public LauncherRepository() : this(new ConfigLoader()) {}
 
         public List<ShortcutDirectory> GetShortcutDirectories()
         {
-            var paths = GetSchortcutDirectoryPaths();
-            return CreateShortcutsResource(paths);
+            return CreateShortcutsResource(LauncherConfig.DirectoryPaths);
+        }
+
+        public Result<Empty> LoadConfig()
+        {
+            try
+            {
+                LauncherConfig = LauncherConfigLoader.Load().Get();
+                return new Result<Empty>.Success();
+            }
+            catch (Exception e)
+            {
+                return new Result<Empty>.Failure(e);
+            }
         }
 
         private List<ShortcutDirectory> CreateShortcutsResource(
@@ -72,13 +90,6 @@ namespace DesktopShortcutLauncher
                 infos.Sort((x, y) => string.Compare(x.Name, y.Name));
             }
             return infos;
-        }
-
-        private List<string> GetSchortcutDirectoryPaths()
-        {
-            return [
-                Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
-            ];
         }
     }
 }
