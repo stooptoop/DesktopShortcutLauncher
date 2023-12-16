@@ -39,7 +39,7 @@ namespace DesktopShortcutLauncher
         private List<ShortcutDirectory> CreateShortcutsResource(
             List<string> srcDirs
         ) {
-            var shortcutDirectoryList = new List<ShortcutDirectory>();
+            var shortcutDirectories = new List<ShortcutDirectory>();
 
             foreach (var shortcutsDirectory in srcDirs)
             {
@@ -48,8 +48,8 @@ namespace DesktopShortcutLauncher
                     var items = new List<ShortcutListItem>();
 
                     DirectoryInfo di = new DirectoryInfo(shortcutsDirectory);
-                    var fileList = GetFileInfoList(di);
-                    foreach (FileInfo file in fileList)
+                    var files = GetFileInfoList(di);
+                    foreach (FileInfo file in files)
                     {
                         string filePath = file.FullName;
                         string fileName = System.IO.Path.GetFileNameWithoutExtension(file.Name);
@@ -62,12 +62,12 @@ namespace DesktopShortcutLauncher
                         }
                     }
 
-                    shortcutDirectoryList.Add(
+                    shortcutDirectories.Add(
                         new ShortcutDirectory(di.Name, di.FullName, items)
                     );
                 }
             }
-            return shortcutDirectoryList;
+            return shortcutDirectories;
         }
 
         private List<FileInfo> GetFileInfoList(DirectoryInfo dirInfo)
