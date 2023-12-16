@@ -57,23 +57,11 @@ namespace DesktopShortcutLauncher
 
         private void UpdateWindowHeight()
         {
+            // TODO: multiscreen & positioning
             var screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
             var verticalMargin = 50;
             var minTop = screenHeight / 2;
             var maxHeight = screenHeight / 2 - verticalMargin;
-            // 
-            // var estimatedHeight = 84 * itemCount + 4;
-            // 
-            // if (estimatedHeight > maxHeight)
-            // {
-            //     this.Top = minTop;
-            //     this.Height = maxHeight;
-            // }
-            // else
-            // {
-            //     this.Top = screenHeight - estimatedHeight - verticalMargin;
-            //     this.Height = estimatedHeight;
-            // }
             this.Top = minTop;
             this.Height = maxHeight;
         }
