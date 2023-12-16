@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Microsoft.WindowsAPICodePack.Shell;
 
 namespace DesktopShortcutLauncher
 {
@@ -13,6 +12,7 @@ namespace DesktopShortcutLauncher
         IConfigLoader LauncherConfigLoader
     ) : ILauncherRepository
     {
+        private ShortcutImageLoader shortcutImageLoader = new ShortcutImageLoader();
         private IConfigLoader LauncherConfigLoader = LauncherConfigLoader;
         private Config LauncherConfig = ConfigLoader.DEFAULT_CONFIG;
 
@@ -40,6 +40,7 @@ namespace DesktopShortcutLauncher
             List<string> srcDirs
         ) {
             var shortcutDirectories = new List<ShortcutDirectory>();
+            var allItems = new List<ShortcutListItem>();
 
             foreach (var shortcutsDirectory in srcDirs)
             {
@@ -53,20 +54,19 @@ namespace DesktopShortcutLauncher
                     {
                         string filePath = file.FullName;
                         string fileName = System.IO.Path.GetFileNameWithoutExtension(file.Name);
-                        using (var shFile = ShellFile.FromFilePath(filePath))
-                        {
-                            shFile.Thumbnail.FormatOption = ShellThumbnailFormatOption.IconOnly;
-                            var imageSrc = shFile.Thumbnail.LargeBitmapSource;
-                            var item = new ShortcutListItem(fileName, filePath, imageSrc);
-                            items.Add(item);
-                        }
+                        var item = new ShortcutListItem(fileName, filePath, null);
+                        items.Add(item);
                     }
 
                     shortcutDirectories.Add(
                         new ShortcutDirectory(di.Name, di.FullName, items)
                     );
+                    allItems.AddRange(items);
                 }
             }
+
+            shortcutImageLoader.LoadImagesAsynchronous(allItems);
+
             return shortcutDirectories;
         }
 

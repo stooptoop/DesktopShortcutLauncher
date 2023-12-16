@@ -37,17 +37,13 @@ namespace DesktopShortcutLauncher
             {
                 ShowAlert($"Failed to initialize app: {ex.Message}");
             }
-
-            SetLauncherDataSource(
-                UseCase.GetLauncherDataSource()
-            );
+            LoadShortcutFiles();
         }
 
         private void LoadShortcutFiles()
         {
-            var srcList = UseCase.GetLauncherDataSource();
-            SetLauncherDataSource(srcList);
-            
+            var directories = UseCase.GetLauncherDataSource();
+            SetLauncherDataSource(directories);
         }
 
         private void SetLauncherDataSource(List<ShortcutDirectory> source)
