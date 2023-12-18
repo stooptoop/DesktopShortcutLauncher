@@ -15,10 +15,10 @@ namespace DesktopShortcutLauncher
         {
             viewModel = new LauncherViewModel(this);
             viewModel.ShortcutDirectoriesUpdated += (self, directories) => self.AppTab.ItemsSource = directories;
-            viewModel.WindowLayoutConfigUpdated += (self, _) => self.UpdateWindowHeight();
+            viewModel.WindowLayoutConfigUpdated += (self, _) => self.UpdateWindowLayout();
 
             InitializeComponent();
-            this.Activated += (_, _) => UpdateWindowHeight();   // for Screen is Changed
+            this.Activated += (_, _) => UpdateWindowLayout();   // for Screen is Changed
             this.Deactivated += (sender, e) => this.WindowState = WindowState.Minimized;
             this.Closing += (sender, e) => Environment.Exit(0);
 
@@ -43,7 +43,7 @@ namespace DesktopShortcutLauncher
             viewModel.GetLauncherDataSource();
         }
 
-        private void UpdateWindowHeight()
+        private void UpdateWindowLayout()
         {
             var screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
             var heightRatio = viewModel.WindowLayout.HeightRatio;

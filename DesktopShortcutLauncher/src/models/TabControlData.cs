@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace DesktopShortcutLauncher
 {
     public class TabControlData(
-        string Title,
-        ShortcutDirectory Directory
+        string title,
+        ShortcutDirectory directory
     )
     {
-        public string Title { get; } = Title;
-        public ShortcutDirectory Directory { get; } = Directory;
+        public string Title { get; } = title;
+        public ShortcutDirectory Directory { get; } = directory;
     }
 }
