@@ -4,25 +4,21 @@ using Newtonsoft.Json;
 
 namespace DesktopShortcutLauncher
 {
-    public interface IConfigLoader
-    {
-        public Result<Config> Load();
-    }
     public class ConfigLoader(
-        string ConfigFilePath = ConfigLoader.CONFIG_FILE_PATH
+        string configFilePath = ConfigLoader.CONFIG_FILE_PATH
     ): IConfigLoader {
         public const string CONFIG_FILE_PATH = "launcherConfig.json";
-        private string ConfigFilePath { get; }  = ConfigFilePath;
+        private string configFilePath { get; }  = configFilePath;
 
         public Result<Config> Load()
         {
-            if (File.Exists(ConfigFilePath))
+            if (File.Exists(configFilePath))
             {
                 try
                 {
-                    using (StreamReader file = new StreamReader(ConfigFilePath, Encoding.UTF8))
+                    using (var file = new StreamReader(configFilePath, Encoding.UTF8))
                     {
-                        string jsonContent = file.ReadToEnd();
+                        var jsonContent = file.ReadToEnd();
                         var config = JsonConvert.DeserializeObject<Config>(jsonContent);
                         if (config == null)
                         {
@@ -39,7 +35,7 @@ namespace DesktopShortcutLauncher
             else
             {
                 return new Result<Config>.Failure(
-                    new FileNotFoundException($"Failed to load Config file. \"{ConfigFilePath}\" is not found.")
+                    new FileNotFoundException($"Failed to load Config file. \"{configFilePath}\" is not found.")
                 );
             }
         }

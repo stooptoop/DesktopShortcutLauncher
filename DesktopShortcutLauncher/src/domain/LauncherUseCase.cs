@@ -2,17 +2,10 @@
 
 namespace DesktopShortcutLauncher
 {
-    public interface ILauncherUseCase
-    {
-        public Result<Config> Initialize();
-        public List<ShortcutDirectory> GetLauncherDataSource();
-        public Result<Empty> LaunchApp(ShortcutListItem item);
-    }
-
     public class LauncherInteractor(
-        ILauncherRepository Repository
+        ILauncherRepository launcherRepository
     ) : ILauncherUseCase {
-        private ILauncherRepository Repository { get; } = Repository;
+        private ILauncherRepository launcherRepository { get; } = launcherRepository;
 
         public LauncherInteractor() : this(new LauncherRepository()) { }
 
@@ -20,8 +13,8 @@ namespace DesktopShortcutLauncher
         {
             try
             {
-                Repository.LoadConfig();
-                return new Result<Config>.Success(Repository.LauncherConfig);
+                launcherRepository.LoadConfig();
+                return new Result<Config>.Success(launcherRepository.LauncherConfig);
             }
             catch (Exception ex)
             {
@@ -29,12 +22,12 @@ namespace DesktopShortcutLauncher
             }
         }
 
-        public List<ShortcutDirectory> GetLauncherDataSource()
+        public List<ShortcutDirectory> RetrieveLauncherDataSource()
         {
-            return Repository.GetShortcutDirectories();
+            return launcherRepository.RetrieveLauncherDataSource();
         }
 
-        public Result<Empty> LaunchApp(ShortcutListItem item)
+        public Result<Empty> LaunchApplication(ShortcutListItem item)
         {
             try
             {

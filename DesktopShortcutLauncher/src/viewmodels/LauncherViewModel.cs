@@ -65,15 +65,15 @@
             WindowLayout = config.Layout;
         }
 
-        public void GetLauncherDataSource()
+        public void RetrieveLauncherDataSource()
         {
-            Directories = useCase.GetLauncherDataSource();
+            Directories = useCase.RetrieveLauncherDataSource();
         }
 
         public void LaunchApplication(ShortcutListItem item)
         {
             // Throwable
-            useCase.LaunchApp(item).Get();
+            useCase.LaunchApplication(item).Get();
         }
     }
 }
