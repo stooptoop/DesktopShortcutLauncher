@@ -8,13 +8,17 @@ namespace DesktopShortcutLauncher
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ILauncherUseCase UseCase { get; } = new LauncherInteractor();
+        public const int WINDOW_LAYOUT_BOTTOM_MARGIN = 50;
+        private LauncherViewModel viewModel;
 
         public MainWindow()
         {
-            InitializeComponent();
+            viewModel = new LauncherViewModel(this);
+            viewModel.ShortcutDirectoriesUpdated += (self, directories) => self.AppTab.ItemsSource = directories;
+            viewModel.WindowLayoutConfigUpdated += (self, _) => self.UpdateWindowHeight();
 
-            this.Activated += (_, _) => UpdateWindowHeight();
+            InitializeComponent();
+            this.Activated += (_, _) => UpdateWindowHeight();   // for Screen is Changed
             this.Deactivated += (sender, e) => this.WindowState = WindowState.Minimized;
             this.Closing += (sender, e) => Environment.Exit(0);
 
@@ -25,7 +29,7 @@ namespace DesktopShortcutLauncher
         {
             try
             {
-                UseCase.Initialize().Get();
+                viewModel.Initialize();
             }
             catch (Exception ex)
             {
@@ -36,25 +40,19 @@ namespace DesktopShortcutLauncher
 
         private void LoadShortcutFiles()
         {
-            var directories = UseCase.GetLauncherDataSource();
-            SetLauncherDataSource(directories);
-        }
-
-        private void SetLauncherDataSource(List<ShortcutDirectory> source)
-        {
-            AppTab.ItemsSource = source;
+            viewModel.GetLauncherDataSource();
         }
 
         private void UpdateWindowHeight()
         {
-            // TODO: multiscreen & positioning
             var screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
-            var bottomMargin = 50;
-            var heightRatio = 0.7;
-            var minTop = Math.Max(0, screenHeight * (1.0 - heightRatio));
-            var maxHeight = (screenHeight - minTop) - bottomMargin;
-            this.Top = minTop;
-            this.Height = maxHeight;
+            var heightRatio = viewModel.WindowLayout.HeightRatio;
+            var top = Math.Max(0, screenHeight * (1.0 - heightRatio));
+
+            this.Top = top;
+            this.Left = viewModel.WindowLayout.X;
+            this.Width = viewModel.WindowLayout.Width;
+            this.Height = (screenHeight - top) - WINDOW_LAYOUT_BOTTOM_MARGIN;
         }
 
         private void ShortcutList_Loaded(object sender, RoutedEventArgs e)
@@ -69,7 +67,7 @@ namespace DesktopShortcutLauncher
                         this.WindowState = WindowState.Minimized;
                         try
                         {
-                            UseCase.LaunchApp(selectedShortcut).Get();
+                            viewModel.LaunchApplication(selectedShortcut);
                         }
                         catch (Exception ex)
                         {

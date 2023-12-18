@@ -4,6 +4,8 @@ namespace DesktopShortcutLauncher
 {
     public interface ILauncherRepository
     {
+        public Config LauncherConfig { get; }
+
         public Result<Empty> LoadConfig();
         public List<ShortcutDirectory> GetShortcutDirectories();
     }
@@ -14,7 +16,12 @@ namespace DesktopShortcutLauncher
     {
         private ShortcutImageLoader shortcutImageLoader = new ShortcutImageLoader();
         private IConfigLoader LauncherConfigLoader = LauncherConfigLoader;
-        private Config LauncherConfig = Config.DEFAULT;
+
+        private Config launcherConfig = Config.DEFAULT;
+        public Config LauncherConfig {
+            get => this.launcherConfig;
+            set => this.launcherConfig = value;
+        }
 
         public LauncherRepository() : this(new ConfigLoader()) {}
 
@@ -27,11 +34,12 @@ namespace DesktopShortcutLauncher
         {
             try
             {
-                LauncherConfig = LauncherConfigLoader.Load().Get();
+                launcherConfig = LauncherConfigLoader.Load().Get();
                 return new Result<Empty>.Success();
             }
             catch (Exception e)
             {
+                launcherConfig = Config.DEFAULT;
                 return new Result<Empty>.Failure(e);
             }
         }
