@@ -14,16 +14,10 @@ namespace DesktopShortcutLauncher
         {
             InitializeComponent();
 
-            this.Deactivated += (sender, e) =>
-            {
-                this.WindowState = WindowState.Minimized;
-            };
-            this.Closing += (sender, e) =>
-            {
-                Environment.Exit(0);
-            };
+            this.Activated += (_, _) => UpdateWindowHeight();
+            this.Deactivated += (sender, e) => this.WindowState = WindowState.Minimized;
+            this.Closing += (sender, e) => Environment.Exit(0);
 
-            UpdateWindowHeight();
             InitializeLauncherApp();
         }
 
@@ -55,9 +49,10 @@ namespace DesktopShortcutLauncher
         {
             // TODO: multiscreen & positioning
             var screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
-            var verticalMargin = 50;
-            var minTop = screenHeight / 2;
-            var maxHeight = screenHeight / 2 - verticalMargin;
+            var bottomMargin = 50;
+            var heightRatio = 0.7;
+            var minTop = Math.Max(0, screenHeight * (1.0 - heightRatio));
+            var maxHeight = (screenHeight - minTop) - bottomMargin;
             this.Top = minTop;
             this.Height = maxHeight;
         }

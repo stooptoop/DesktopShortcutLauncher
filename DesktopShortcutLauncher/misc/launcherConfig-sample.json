@@ -2,5 +2,10 @@
     "DirectoryPaths": [
         "C:\\Users\\Stooptoop\\Desktop",
         "C:\\Users\\Stooptoop\\Shortcuts"
-    ]
+    ],
+    "Layout": {
+        "X": 50,
+        "Width": 400,
+        "HeightRatio": 0.5
+    }
 }

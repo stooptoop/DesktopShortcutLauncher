@@ -14,7 +14,7 @@ namespace DesktopShortcutLauncher
     {
         private ShortcutImageLoader shortcutImageLoader = new ShortcutImageLoader();
         private IConfigLoader LauncherConfigLoader = LauncherConfigLoader;
-        private Config LauncherConfig = ConfigLoader.DEFAULT_CONFIG;
+        private Config LauncherConfig = Config.DEFAULT;
 
         public LauncherRepository() : this(new ConfigLoader()) {}
 
