@@ -27,6 +27,10 @@ namespace DesktopShortcutLauncher
             try
             {
                 launcherConfig = LauncherConfigLoader.Load().Get();
+                if (!launcherConfig.DirectoryPaths.Any())
+                {
+                    launcherConfig.DirectoryPaths.AddRange(Config.DEFAULT.DirectoryPaths);
+                }
                 return new Result<Empty>.Success();
             }
             catch (Exception e)
