@@ -12,11 +12,6 @@ namespace DesktopShortcutLauncher
         string ConfigFilePath = ConfigLoader.CONFIG_FILE_PATH
     ): IConfigLoader {
         public const string CONFIG_FILE_PATH = "launcherConfig.json";
-
-        public static readonly Config DEFAULT_CONFIG = new Config([
-            Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
-        ]);
-
         private string ConfigFilePath { get; }  = ConfigFilePath;
 
         public Result<Config> Load()
