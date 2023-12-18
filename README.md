@@ -19,6 +19,9 @@ Email: stoop2p@gmail.com
 this application serves as a convenient launcher for your desktop shortcuts.  
 you can instantly access and manage your various shortcut files (*.lnk, *.url) within a directory.
 
+<img src="documents/screenshots/ss1.png" width="40%"/>
+<img src="documents/screenshots/ss2.png" width="40%"/>
+
 ## Installation
 
 To install `DesktopShortcutLauncher`, follow these simple steps:
