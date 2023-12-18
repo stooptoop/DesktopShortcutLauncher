@@ -5,6 +5,6 @@
         public Config LauncherConfig { get; }
 
         public Result<Empty> LoadConfig();
-        public List<ShortcutDirectory> GetShortcutDirectories();
+        public List<ShortcutDirectory> RetrieveLauncherDataSource();
     }
 }

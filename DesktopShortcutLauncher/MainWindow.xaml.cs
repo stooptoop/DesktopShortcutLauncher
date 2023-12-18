@@ -40,7 +40,7 @@ namespace DesktopShortcutLauncher
 
         private void LoadShortcutFiles()
         {
-            viewModel.GetLauncherDataSource();
+            viewModel.RetrieveLauncherDataSource();
         }
 
         private void UpdateWindowLayout()

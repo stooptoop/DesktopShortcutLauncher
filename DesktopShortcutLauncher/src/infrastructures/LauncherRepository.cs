@@ -11,15 +11,15 @@ namespace DesktopShortcutLauncher
 
         private Config launcherConfig = Config.DEFAULT;
         public Config LauncherConfig {
-            get => this.launcherConfig;
-            set => this.launcherConfig = value;
+            get => launcherConfig;
+            set => launcherConfig = value;
         }
 
         public LauncherRepository() : this(new ConfigLoader()) {}
 
-        public List<ShortcutDirectory> GetShortcutDirectories()
+        public List<ShortcutDirectory> RetrieveLauncherDataSource()
         {
-            return CreateShortcutsResource(LauncherConfig.DirectoryPaths);
+            return CreateResources(LauncherConfig.DirectoryPaths);
         }
 
         public Result<Empty> LoadConfig()
@@ -36,20 +36,19 @@ namespace DesktopShortcutLauncher
             }
         }
 
-        private List<ShortcutDirectory> CreateShortcutsResource(
-            List<string> srcDirs
-        ) {
+        private List<ShortcutDirectory> CreateResources(List<string> directories)
+        {
             var shortcutDirectories = new List<ShortcutDirectory>();
             var allItems = new List<ShortcutListItem>();
 
-            foreach (var shortcutsDirectory in srcDirs)
+            foreach (var shortcutsDirectory in directories)
             {
                 if (Directory.Exists(shortcutsDirectory))
                 {
                     var items = new List<ShortcutListItem>();
 
                     DirectoryInfo di = new DirectoryInfo(shortcutsDirectory);
-                    var files = GetFileInfoList(di);
+                    var files = CollectFileInfoList(di);
                     foreach (FileInfo file in files)
                     {
                         string filePath = file.FullName;
@@ -70,9 +69,9 @@ namespace DesktopShortcutLauncher
             return shortcutDirectories;
         }
 
-        private List<FileInfo> GetFileInfoList(DirectoryInfo dirInfo)
+        private List<FileInfo> CollectFileInfoList(DirectoryInfo info)
         {
-            List<FileInfo> infos = new List<FileInfo>();
+            var infos = new List<FileInfo>();
 
             var getShortcuts = (DirectoryInfo di) =>
             {
@@ -80,8 +79,8 @@ namespace DesktopShortcutLauncher
                 infos.AddRange(files);
             };
 
-            getShortcuts(dirInfo);
-            if (dirInfo.FullName == Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
+            getShortcuts(info);
+            if (info.FullName == Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
             {
                 DirectoryInfo commonDesktopInfo = new DirectoryInfo(
                     Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory)

@@ -22,12 +22,12 @@ namespace DesktopShortcutLauncher
             }
         }
 
-        public List<ShortcutDirectory> GetLauncherDataSource()
+        public List<ShortcutDirectory> RetrieveLauncherDataSource()
         {
-            return launcherRepository.GetShortcutDirectories();
+            return launcherRepository.RetrieveLauncherDataSource();
         }
 
-        public Result<Empty> LaunchApp(ShortcutListItem item)
+        public Result<Empty> LaunchApplication(ShortcutListItem item)
         {
             try
             {
