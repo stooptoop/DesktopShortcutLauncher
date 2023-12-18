@@ -29,8 +29,6 @@
             HeightRatio = heightRatio ?? HeightRatio;
         }
 
-        public const int BOTTOM_MARGIN = 50;
-
         public int X { get; } = 50;
         public int Width { get; } = 400;
         public double HeightRatio { get; } = 0.5;

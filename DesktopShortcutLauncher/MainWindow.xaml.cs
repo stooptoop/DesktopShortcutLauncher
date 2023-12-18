@@ -8,6 +8,7 @@ namespace DesktopShortcutLauncher
     /// </summary>
     public partial class MainWindow : Window
     {
+        public const int WINDOW_LAYOUT_BOTTOM_MARGIN = 50;
         private LauncherViewModel viewModel;
 
         public MainWindow()
@@ -44,14 +45,13 @@ namespace DesktopShortcutLauncher
         private void UpdateWindowHeight()
         {
             var screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
-            var bottomMargin = 50;
             var heightRatio = viewModel.WindowLayout.HeightRatio;
             var top = Math.Max(0, screenHeight * (1.0 - heightRatio));
 
             this.Top = top;
             this.Left = viewModel.WindowLayout.X;
             this.Width = viewModel.WindowLayout.Width;
-            this.Height = (screenHeight - top) - bottomMargin;
+            this.Height = (screenHeight - top) - WINDOW_LAYOUT_BOTTOM_MARGIN;
         }
 
         private void ShortcutList_Loaded(object sender, RoutedEventArgs e)
