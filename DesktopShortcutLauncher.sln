@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopShortcutWatcher", "DesktopShortcutWatcher\DesktopShortcutWatcher.csproj", "{EB0236BB-4C3B-4919-BC8F-078E1BD68470}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopShortcutLauncher", "DesktopShortcutLauncher\DesktopShortcutLauncher.csproj", "{E76A11FD-1EB1-42EA-A0F8-9AEFC7C4A895}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopShortcutLauncher", "DesktopShortcutLauncher\DesktopShortcutLauncher.csproj", "{E76A11FD-1EB1-42EA-A0F8-9AEFC7C4A895}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EB0236BB-4C3B-4919-BC8F-078E1BD68470}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EB0236BB-4C3B-4919-BC8F-078E1BD68470}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EB0236BB-4C3B-4919-BC8F-078E1BD68470}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EB0236BB-4C3B-4919-BC8F-078E1BD68470}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E76A11FD-1EB1-42EA-A0F8-9AEFC7C4A895}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E76A11FD-1EB1-42EA-A0F8-9AEFC7C4A895}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E76A11FD-1EB1-42EA-A0F8-9AEFC7C4A895}.Release|Any CPU.ActiveCfg = Release|Any CPU
