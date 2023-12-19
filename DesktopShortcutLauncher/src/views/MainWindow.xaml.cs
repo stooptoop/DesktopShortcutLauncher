@@ -6,7 +6,7 @@ namespace DesktopShortcutLauncher
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, ILauncherViewModelObserver
     {
         public const int WINDOW_LAYOUT_BOTTOM_MARGIN = 50;
         private LauncherViewModel viewModel;
@@ -14,8 +14,6 @@ namespace DesktopShortcutLauncher
         public MainWindow()
         {
             viewModel = new LauncherViewModel(this);
-            viewModel.ShortcutDirectoriesUpdated += (self, directories) => self.AppTab.ItemsSource = directories;
-            viewModel.WindowLayoutConfigUpdated += (self, _) => self.UpdateWindowLayout();
 
             InitializeComponent();
             this.Activated += (_, _) => UpdateWindowLayout();   // for Screen is Changed
@@ -77,6 +75,16 @@ namespace DesktopShortcutLauncher
                     }
                 };
             }
+        }
+
+        public void OnShortcutDirectoriesUpdated(List<ShortcutDirectory> directories)
+        {
+            AppTab.ItemsSource = directories;
+        }
+
+        public void OnWindowLayoutConfigUpdated(WindowLayout layout)
+        {
+            UpdateWindowLayout();
         }
 
         private void ShowAlert(string message)
