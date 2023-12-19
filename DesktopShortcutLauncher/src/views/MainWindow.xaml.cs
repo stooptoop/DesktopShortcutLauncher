@@ -6,7 +6,7 @@ namespace DesktopShortcutLauncher
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, ILauncherViewModelObserver
     {
         public const int WINDOW_LAYOUT_BOTTOM_MARGIN = 50;
         private LauncherViewModel viewModel;
@@ -14,32 +14,13 @@ namespace DesktopShortcutLauncher
         public MainWindow()
         {
             viewModel = new LauncherViewModel(this);
-            viewModel.ShortcutDirectoriesUpdated += (self, directories) => self.AppTab.ItemsSource = directories;
-            viewModel.WindowLayoutConfigUpdated += (self, _) => self.UpdateWindowLayout();
 
             InitializeComponent();
             this.Activated += (_, _) => UpdateWindowLayout();   // for Screen is Changed
             this.Deactivated += (sender, e) => this.WindowState = WindowState.Minimized;
             this.Closing += (sender, e) => Environment.Exit(0);
 
-            InitializeLauncherApp();
-        }
-
-        private void InitializeLauncherApp()
-        {
-            try
-            {
-                viewModel.Initialize();
-            }
-            catch (Exception ex)
-            {
-                ShowAlert($"Failed to initialize app: {ex.Message}");
-            }
-            LoadShortcutFiles();
-        }
-
-        private void LoadShortcutFiles()
-        {
+            viewModel.Initialize();
             viewModel.RetrieveLauncherDataSource();
         }
 
@@ -61,25 +42,27 @@ namespace DesktopShortcutLauncher
             {
                 listView.SelectionChanged += (_, _) =>
                 {
-                    if (listView.SelectedItem != null)
+                    if (listView.SelectedItem is ShortcutListItem item)
                     {
-                        var selectedShortcut = (ShortcutListItem)listView.SelectedItem;
                         this.WindowState = WindowState.Minimized;
-                        try
-                        {
-                            viewModel.LaunchApplication(selectedShortcut);
-                        }
-                        catch (Exception ex)
-                        {
-                            ShowAlert($"Failed to start shortcut: {ex.Message}");
-                        }
+                        viewModel.LaunchApplication(item);
                         listView.UnselectAll();
                     }
                 };
             }
         }
 
-        private void ShowAlert(string message)
+        public void OnShortcutDirectoriesUpdated(List<ShortcutDirectory> directories)
+        {
+            AppTab.ItemsSource = directories;
+        }
+
+        public void OnWindowLayoutConfigUpdated(WindowLayout layout)
+        {
+            UpdateWindowLayout();
+        }
+
+        public void OnShowableErrorReceived(string message)
         {
             MessageBox.Show(this, message);
         }

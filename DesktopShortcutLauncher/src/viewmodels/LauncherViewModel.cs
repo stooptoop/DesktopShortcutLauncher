@@ -1,19 +1,21 @@
 ﻿namespace DesktopShortcutLauncher
 {
-    public delegate void ShotcutDirectoriesUpdatedDelegate(
-        MainWindow window, List<ShortcutDirectory> directories);
-
-    public delegate void WindowLayoutConfigUpdatedDelegate(MainWindow window, WindowLayout layout);
+    public interface ILauncherViewModelObserver
+    {
+        public void OnShortcutDirectoriesUpdated(List<ShortcutDirectory> directories);
+        public void OnWindowLayoutConfigUpdated(WindowLayout layout);
+        public void OnShowableErrorReceived(string message);
+    }
 
     public class LauncherViewModel
     {
         private ILauncherUseCase useCase;
 
         /**
-         * Window has a ViewModel instance.
+         * View(implements ILauncherViewModelObserver) has a ViewModel instance.
          * To avoid cross-referencing, use WeakReference.
          */
-        private WeakReference<MainWindow> windowRef;
+        private WeakReference<ILauncherViewModelObserver> observerRef;
 
         private List<ShortcutDirectory> directories = new List<ShortcutDirectory>();
         private List<ShortcutDirectory> Directories
@@ -22,9 +24,9 @@
             set
             {
                 directories = value;
-                if (windowRef.TryGetTarget(out var window))
+                if (observerRef.TryGetTarget(out var observer))
                 {
-                    ShortcutDirectoriesUpdated(window, directories);
+                    observer.OnShortcutDirectoriesUpdated(directories);
                 }
             }
         }
@@ -36,33 +38,39 @@
             set
             {
                 windowLayout = value;
-                if (windowRef.TryGetTarget(out var window))
+                if (observerRef.TryGetTarget(out var observer))
                 {
-                    WindowLayoutConfigUpdated(window, windowLayout);
+                    observer.OnWindowLayoutConfigUpdated(windowLayout);
                 }
             }
         }
 
-        public ShotcutDirectoriesUpdatedDelegate ShortcutDirectoriesUpdated = (_, _) => { };
-        public WindowLayoutConfigUpdatedDelegate WindowLayoutConfigUpdated = (_, _) => { };
-
         public LauncherViewModel(
-            MainWindow window,
+            ILauncherViewModelObserver observer,
             ILauncherUseCase useCase
         ) {
-            this.windowRef = new WeakReference<MainWindow>(window);
+            this.observerRef = new WeakReference<ILauncherViewModelObserver>(observer);
             this.useCase = useCase;
         }
 
-        public LauncherViewModel(MainWindow window)
-            : this(window, new LauncherInteractor()){ }
+        public LauncherViewModel(ILauncherViewModelObserver observer)
+            : this(observer, new LauncherInteractor()){ }
 
 
         public void Initialize()
         {
-            // Throwable
-            var config = useCase.Initialize().Get();
-            WindowLayout = config.Layout;
+            try
+            {
+                var config = useCase.Initialize().Get();
+                WindowLayout = config.Layout;
+            }
+            catch (Exception ex)
+            {
+                if (observerRef.TryGetTarget(out var observer))
+                {
+                    observer.OnShowableErrorReceived($"Failed to initialize app: {ex.Message}");
+                }
+            }
         }
 
         public void RetrieveLauncherDataSource()
@@ -72,8 +80,17 @@
 
         public void LaunchApplication(ShortcutListItem item)
         {
-            // Throwable
-            useCase.LaunchApplication(item).Get();
+            try
+            {
+                useCase.LaunchApplication(item).Get();
+            }
+            catch (Exception ex)
+            {
+                if (observerRef.TryGetTarget(out var observer))
+                {
+                    observer.OnShowableErrorReceived($"Failed to start shortcut: {ex.Message}");
+                }
+            }
         }
     }
 }
