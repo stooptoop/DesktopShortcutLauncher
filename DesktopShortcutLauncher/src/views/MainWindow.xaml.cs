@@ -20,24 +20,7 @@ namespace DesktopShortcutLauncher
             this.Deactivated += (sender, e) => this.WindowState = WindowState.Minimized;
             this.Closing += (sender, e) => Environment.Exit(0);
 
-            InitializeLauncherApp();
-        }
-
-        private void InitializeLauncherApp()
-        {
-            try
-            {
-                viewModel.Initialize();
-            }
-            catch (Exception ex)
-            {
-                ShowAlert($"Failed to initialize app: {ex.Message}");
-            }
-            LoadShortcutFiles();
-        }
-
-        private void LoadShortcutFiles()
-        {
+            viewModel.Initialize();
             viewModel.RetrieveLauncherDataSource();
         }
 
@@ -59,18 +42,10 @@ namespace DesktopShortcutLauncher
             {
                 listView.SelectionChanged += (_, _) =>
                 {
-                    if (listView.SelectedItem != null)
+                    if (listView.SelectedItem is ShortcutListItem item)
                     {
-                        var selectedShortcut = (ShortcutListItem)listView.SelectedItem;
                         this.WindowState = WindowState.Minimized;
-                        try
-                        {
-                            viewModel.LaunchApplication(selectedShortcut);
-                        }
-                        catch (Exception ex)
-                        {
-                            ShowAlert($"Failed to start shortcut: {ex.Message}");
-                        }
+                        viewModel.LaunchApplication(item);
                         listView.UnselectAll();
                     }
                 };
@@ -87,7 +62,7 @@ namespace DesktopShortcutLauncher
             UpdateWindowLayout();
         }
 
-        private void ShowAlert(string message)
+        public void OnShowableErrorReceived(string message)
         {
             MessageBox.Show(this, message);
         }

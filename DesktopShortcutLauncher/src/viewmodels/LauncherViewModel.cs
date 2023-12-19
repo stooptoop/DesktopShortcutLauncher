@@ -4,6 +4,7 @@
     {
         public void OnShortcutDirectoriesUpdated(List<ShortcutDirectory> directories);
         public void OnWindowLayoutConfigUpdated(WindowLayout layout);
+        public void OnShowableErrorReceived(string message);
     }
 
     public class LauncherViewModel
@@ -58,9 +59,18 @@
 
         public void Initialize()
         {
-            // Throwable
-            var config = useCase.Initialize().Get();
-            WindowLayout = config.Layout;
+            try
+            {
+                var config = useCase.Initialize().Get();
+                WindowLayout = config.Layout;
+            }
+            catch (Exception ex)
+            {
+                if (observerRef.TryGetTarget(out var observer))
+                {
+                    observer.OnShowableErrorReceived($"Failed to initialize app: {ex.Message}");
+                }
+            }
         }
 
         public void RetrieveLauncherDataSource()
@@ -70,8 +80,17 @@
 
         public void LaunchApplication(ShortcutListItem item)
         {
-            // Throwable
-            useCase.LaunchApplication(item).Get();
+            try
+            {
+                useCase.LaunchApplication(item).Get();
+            }
+            catch (Exception ex)
+            {
+                if (observerRef.TryGetTarget(out var observer))
+                {
+                    observer.OnShowableErrorReceived($"Failed to start shortcut: {ex.Message}");
+                }
+            }
         }
     }
 }
