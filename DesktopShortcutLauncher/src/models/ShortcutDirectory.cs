@@ -1,13 +1,13 @@
 ﻿namespace DesktopShortcutLauncher
 {
     public class ShortcutDirectory(
-        string DisplayName,
-        string DirectoryPath,
-        List<ShortcutListItem> Items
+        string displayName,
+        string directoryPath,
+        List<ShortcutListItem> items
     )
     {
-        public string DisplayName { get; } = DisplayName;
-        public string DirectoryPath { get; } = DirectoryPath;
-        public List<ShortcutListItem> Items { get; } = Items;
+        public string DisplayName { get; } = displayName;
+        public string DirectoryPath { get; } = directoryPath;
+        public List<ShortcutListItem> Items { get; } = items;
     }
 }
