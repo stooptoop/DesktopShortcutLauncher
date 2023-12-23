@@ -4,6 +4,7 @@
     {
         public void OnShortcutDirectoriesUpdated(List<ShortcutDirectory> directories);
         public void OnWindowLayoutConfigUpdated(WindowLayout layout);
+        public void OnThemeConfigUpdated(Theme theme);
         public void OnShowableErrorReceived(string message);
     }
 
@@ -45,6 +46,20 @@
             }
         }
 
+        public Theme theme = Config.DEFAULT.Theme;
+        public Theme Theme
+        {
+            get =>  theme;
+            set
+            {
+                theme = value;
+                if (observerRef.TryGetTarget(out var observer))
+                {
+                    observer.OnThemeConfigUpdated(theme);
+                }
+            }
+        }
+
         public LauncherViewModel(
             ILauncherViewModelObserver observer,
             ILauncherUseCase useCase
@@ -63,6 +78,7 @@
             {
                 var config = useCase.Initialize().Get();
                 WindowLayout = config.Layout;
+                Theme = config.Theme;
             }
             catch (Exception ex)
             {
