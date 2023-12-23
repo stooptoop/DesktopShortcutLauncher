@@ -18,8 +18,8 @@ namespace DesktopShortcutLauncher
             InitializeComponent();
             this.DataContext = new { Theme = new Theme() };
             this.Activated += (_, _) => UpdateWindowLayout();   // for Screen is Changed
-            this.Deactivated += (sender, e) => this.WindowState = WindowState.Minimized;
-            this.Closing += (sender, e) => Environment.Exit(0);
+            this.Deactivated += (_, _) => this.WindowState = WindowState.Minimized;
+            this.Closing += (_, _) => Environment.Exit(0);
 
             viewModel.Initialize();
             viewModel.RetrieveLauncherDataSource();
