@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel;
 using DesktopShortcutLauncher.src.models;
 
-namespace DesktopShortcutLauncher
+namespace DesktopShortcutLauncher.src.presentation.viewmodels
 {
     public interface ILauncherViewModelObserver
     {
         public void OnShowableErrorReceived(string message);
     }
 
-    public class LauncherViewModel: INotifyPropertyChanged
+    public class LauncherViewModel : INotifyPropertyChanged
     {
         private ILauncherUseCase useCase;
 
@@ -43,7 +43,7 @@ namespace DesktopShortcutLauncher
         public Theme theme = Config.DEFAULT.Theme;
         public Theme Theme
         {
-            get =>  theme;
+            get => theme;
             set
             {
                 theme = value;
@@ -54,13 +54,14 @@ namespace DesktopShortcutLauncher
         public LauncherViewModel(
             ILauncherViewModelObserver observer,
             ILauncherUseCase useCase
-        ) {
-            this.observerRef = new WeakReference<ILauncherViewModelObserver>(observer);
+        )
+        {
+            observerRef = new WeakReference<ILauncherViewModelObserver>(observer);
             this.useCase = useCase;
         }
 
         public LauncherViewModel(ILauncherViewModelObserver observer)
-            : this(observer, new LauncherInteractor()){ }
+            : this(observer, new LauncherInteractor()) { }
 
 
         public void Initialize()
