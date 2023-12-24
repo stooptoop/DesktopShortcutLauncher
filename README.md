@@ -9,7 +9,7 @@ Email: stoop2p@gmail.com
 - [Installation](#Installation)
 - [Usage](#Usage)
 - [Configuration](#Configuration)
-- [Recommended Usage](#Recommended%20Usage)
+- [Recommended Usage](#Recommended-Usage)
 - [Dependencies](#Dependencies)
 - [License](#license)
 
@@ -32,8 +32,6 @@ To install `DesktopShortcutLauncher`, follow these simple steps:
 
 When first launched `DesktopShortcutLauncher.exe`, it will list the shortcut files in your `Desktop` directory.  
 By editing the `launcherConfig.json`, you can target directories other than the desktop.
-
-No further installations or setups are required. Enjoy the convenience of managing and accessing your desktop shortcuts effortlessly with Desktop Shortcut Launcher!
 
 Please see [Configuration](#Configuration).
 
@@ -65,6 +63,16 @@ Example:
         "X": 50,
         "Width": 400,
         "HeightRatio": 0.5
+    },
+    "Theme": {
+        "Background": "#FF111111",
+        "OnBackground": "#FFF8F8F8",
+        "MouseOverItemBackground": "#FF000000",
+        "OnMouseOverItemBackground": "#FFF8F8F8",
+        "TabBackground": "#FF111111",
+        "OnTabBackground": "#FFF8F8F8",
+        "SelectedTabBackground": "#FF000000",
+        "OnSelectedTabBackground": "#FFF8F8F8"
     }
 }
 ```
@@ -80,6 +88,17 @@ These options are optional. If omitted, using default values.
 |- X|Integer|X-coordinate position of application window.<br>**Default**: 50|
 |- Width|Integer|Width of application window. <br>**Default**: 400|
 |- HeightRatio|Double|Ratio of window height to screen. Value range is 0 to 1.0 .<br>**Default**: 0.5|
+|Theme|Struct|Configurations of application theme color.|
+|- Background|String(Color)|Background color of window.<br>**Default**: #FF111111|
+|- OnBackground|String(Color)|Base text color.<br>**Default**: #FFF8F8F8|
+|- MouseOverItemBackground|String(Color)|Background color of Mouse-overed shortcut item's.<br>**Default**: #FF000000|
+|- OnMouseOverItemBackground|String(Color)|Text color of Mouse-overed shortcut item's.<br>**Default**: #FFF8F8F8|
+|- TabBackground|String(Color)|Background color of tabs.<br>**Default**: #FF111111|
+|- OnTabBackground|String(Color)|Text color of tabs.<br>**Default**: #FFF8F8F8|
+|- SelectedTabBackground|String(Color)|Background color of selected tab.<br>**Default**: #FF000000|
+|- OnSelectedTabBackground|String(Color)|Text color of selected tab.<br>**Default**: #FFF8F8F8|
+
+
 
 When the configuration is complete, please restart `DesktopShortcutLauncher.exe` to reflect it.
 
