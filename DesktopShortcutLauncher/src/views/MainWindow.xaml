@@ -8,30 +8,19 @@
         mc:Ignorable="d"
         Title="Desktop Shortcut Launcher" Left="50" Height="100" Width="400"
         WindowStyle="None" AllowsTransparency="True">
-    <Window.Background>
-        <SolidColorBrush Color="#FF111111"/>
-    </Window.Background>
     <Window.Resources>
-        <Style x:Key="ContainerStyle" TargetType="ListViewItem" >
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ContentControl}">
-                        <Border Background="{TemplateBinding Background}">
-                            <ContentPresenter />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="Transparent" />
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FF000000" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+        <SolidColorBrush x:Key="BackgroundBrush" Color="{Binding Theme.Background}" />
+        <SolidColorBrush x:Key="OnBackgroundBrush" Color="{Binding Theme.OnBackground}" />
+        <SolidColorBrush x:Key="MouseOverItemBackgroundBrush" Color="{Binding Theme.MouseOverItemBackground}" />
+        <SolidColorBrush x:Key="OnMouseOverItemBackgroundBrush" Color="{Binding Theme.OnMouseOverItemBackground}" />
+        <SolidColorBrush x:Key="TabBackgroundBrush" Color="{Binding Theme.TabBackground}" />
+        <SolidColorBrush x:Key="OnTabBackgroundBrush" Color="{Binding Theme.OnTabBackground}" />
+        <SolidColorBrush x:Key="SelectedTabBackgroundBrush" Color="{Binding Theme.SelectedTabBackground}" />
+        <SolidColorBrush x:Key="OnSelectedTabBackgroundBrush" Color="{Binding Theme.OnSelectedTabBackground}" />
     </Window.Resources>
+    <Window.Background>
+        <StaticResource ResourceKey="BackgroundBrush"/>
+    </Window.Background>
     <Grid>
         <TabControl x:Name="AppTab" Background="Transparent" BorderThickness="0">
             <TabControl.Resources>
@@ -47,10 +36,12 @@
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsSelected" Value="False">
-                                        <Setter TargetName="TabBorder" Property="Background" Value="Transparent" />
+                                        <Setter TargetName="TabBorder" Property="Background" Value="{DynamicResource TabBackgroundBrush}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource OnTabBackgroundBrush}" />
                                     </Trigger>
                                     <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="TabBorder" Property="Background" Value="Black" />
+                                        <Setter TargetName="TabBorder" Property="Background" Value="{DynamicResource SelectedTabBackgroundBrush}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource OnSelectedTabBackgroundBrush}" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -59,13 +50,9 @@
                 </Style>
             </TabControl.Resources>
 
-
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding DisplayName}"
-                               FontSize="14"
-                               Foreground="#FFF8F8F8"
-                               Margin="16,8,16,8" />
+                    <TextBlock Text="{Binding DisplayName}" FontSize="14" Margin="16,8,16,8" />
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
@@ -78,13 +65,43 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <ListView Grid.Row="0" Grid.Column="0" Margin="0" Background="Transparent" BorderThickness="0"
-                                  VerticalAlignment="Stretch"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                          ItemContainerStyle="{StaticResource ContainerStyle}"
-                          VirtualizingPanel.ScrollUnit="Pixel"
-                          ItemsSource="{Binding Items}"
-                          Loaded="ShortcutList_Loaded">
+                            VerticalAlignment="Stretch"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                            VirtualizingPanel.ScrollUnit="Pixel"
+                            ItemsSource="{Binding Items}"
+                            Loaded="ShortcutList_Loaded">
+
+                            <ListView.Resources>
+                                <Style TargetType="ListViewItem" x:Key="ListViewItemStyle">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListViewItem">
+                                                <Border x:Name="Border" Background="Transparent">
+                                                    <ContentPresenter />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Foreground" Value="{DynamicResource OnBackgroundBrush}" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="False">
+                                                        <Setter Property="Foreground" Value="{DynamicResource OnBackgroundBrush}" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource MouseOverItemBackgroundBrush}" />
+                                                        <Setter Property="Foreground" Value="{DynamicResource OnMouseOverItemBackgroundBrush}" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListView.Resources>
+
+                            <ListView.ItemContainerStyle>
+                                <StaticResource ResourceKey="ListViewItemStyle"/>
+                            </ListView.ItemContainerStyle>
+
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -93,7 +110,6 @@
                                                TextTrimming="CharacterEllipsis"
                                                TextWrapping="NoWrap"
                                                FontSize="16"
-                                               Foreground="#FFF8F8F8"
                                                VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </DataTemplate>

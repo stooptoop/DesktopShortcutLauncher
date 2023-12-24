@@ -7,5 +7,15 @@
         "X": 50,
         "Width": 400,
         "HeightRatio": 0.5
+    },
+    "Theme": {
+        "Background": "#FF111111",
+        "OnBackground": "#FFF8F8F8",
+        "MouseOverItemBackground": "#FF000000",
+        "OnMouseOverItemBackground": "#FFF8F8F8",
+        "TabBackground": "#FF111111",
+        "OnTabBackground": "#FFF8F8F8",
+        "SelectedTabBackground": "#FF000000",
+        "OnSelectedTabBackground": "#FFF8F8F8"
     }
 }
