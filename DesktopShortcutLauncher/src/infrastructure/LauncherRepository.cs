@@ -22,7 +22,7 @@ namespace DesktopShortcutLauncher
             return CreateResources(LauncherConfig.DirectoryPaths);
         }
 
-        public Result<Empty> LoadConfig()
+        public Result<Config> LoadConfig()
         {
             try
             {
@@ -31,13 +31,18 @@ namespace DesktopShortcutLauncher
                 {
                     launcherConfig.DirectoryPaths.AddRange(Config.DEFAULT.DirectoryPaths);
                 }
-                return new Result<Empty>.Success();
+                return new Result<Config>.Success(launcherConfig);
             }
             catch (Exception e)
             {
                 launcherConfig = Config.DEFAULT;
-                return new Result<Empty>.Failure(e);
+                return new Result<Config>.Failure(e);
             }
+        }
+
+        public double GetScreenHeight()
+        {
+            return System.Windows.SystemParameters.PrimaryScreenHeight;
         }
 
         private List<ShortcutDirectory> CreateResources(List<string> directories)
