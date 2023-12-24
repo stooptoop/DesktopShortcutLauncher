@@ -77,7 +77,7 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="ListViewItem">
-                                                <Border x:Name="Border" Background="{DynamicResource BackgroundBrush}">
+                                                <Border x:Name="Border" Background="Transparent">
                                                     <ContentPresenter />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
