@@ -1,9 +1,11 @@
-﻿namespace DesktopShortcutLauncher
+﻿using DesktopShortcutLauncher.src.models;
+
+namespace DesktopShortcutLauncher
 {
     public interface ILauncherUseCase
     {
-        public Result<Config> Initialize();
-        public List<ShortcutDirectory> RetrieveLauncherDataSource();
+        public Result<LauncherDataSource> Initialize();
         public Result<Empty> LaunchApplication(ShortcutListItem item);
+        public WindowBound ResumeWindow();
     }
 }

@@ -8,70 +8,37 @@ namespace DesktopShortcutLauncher
     /// </summary>
     public partial class MainWindow : Window, ILauncherViewModelObserver
     {
-        public const int WINDOW_LAYOUT_BOTTOM_MARGIN = 50;
         private LauncherViewModel viewModel;
 
         public MainWindow()
         {
             viewModel = new LauncherViewModel(this);
+            this.DataContext = viewModel;
 
             InitializeComponent();
-            this.DataContext = new { Theme = new Theme() };
-            this.Activated += (_, _) => UpdateWindowLayout();   // for Screen is Changed
+            this.Activated += (_, _) => viewModel.ResumeWindow();   // for Screen is Changed
             this.Deactivated += (_, _) => this.WindowState = WindowState.Minimized;
             this.Closing += (_, _) => Environment.Exit(0);
 
             viewModel.Initialize();
-            viewModel.RetrieveLauncherDataSource();
         }
 
-        private void UpdateWindowLayout()
-        {
-            var screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
-            var heightRatio = viewModel.WindowLayout.HeightRatio;
-            var top = Math.Max(0, screenHeight * (1.0 - heightRatio));
-
-            this.Top = top;
-            this.Left = viewModel.WindowLayout.X;
-            this.Width = viewModel.WindowLayout.Width;
-            this.Height = (screenHeight - top) - WINDOW_LAYOUT_BOTTOM_MARGIN;
-        }
-
-        private void ShortcutList_Loaded(object sender, RoutedEventArgs e)
+        private void ShortcutList_SelectionChanged(object sender, RoutedEventArgs e)
         {
             if (sender is ListView listView)
             {
-                listView.SelectionChanged += (_, _) =>
+                if (listView.SelectedItem is ShortcutListItem item)
                 {
-                    if (listView.SelectedItem is ShortcutListItem item)
-                    {
-                        this.WindowState = WindowState.Minimized;
-                        viewModel.LaunchApplication(item);
-                        listView.UnselectAll();
-                    }
-                };
+                    this.WindowState = WindowState.Minimized;
+                    viewModel.LaunchApplication(item);
+                    listView.UnselectAll();
+                }
             }
-        }
-
-        public void OnShortcutDirectoriesUpdated(List<ShortcutDirectory> directories)
-        {
-            AppTab.ItemsSource = directories;
-        }
-
-        public void OnWindowLayoutConfigUpdated(WindowLayout layout)
-        {
-            UpdateWindowLayout();
         }
 
         public void OnShowableErrorReceived(string message)
         {
             MessageBox.Show(this, message);
-        }
-
-        public void OnThemeConfigUpdated(Theme theme)
-        {
-            this.DataContext = new { Theme = theme };
-            this.UpdateLayout();
         }
     }
 }

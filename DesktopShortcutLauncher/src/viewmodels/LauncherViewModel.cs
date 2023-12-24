@@ -1,14 +1,14 @@
-﻿namespace DesktopShortcutLauncher
+﻿using System.ComponentModel;
+using DesktopShortcutLauncher.src.models;
+
+namespace DesktopShortcutLauncher
 {
     public interface ILauncherViewModelObserver
     {
-        public void OnShortcutDirectoriesUpdated(List<ShortcutDirectory> directories);
-        public void OnWindowLayoutConfigUpdated(WindowLayout layout);
-        public void OnThemeConfigUpdated(Theme theme);
         public void OnShowableErrorReceived(string message);
     }
 
-    public class LauncherViewModel
+    public class LauncherViewModel: INotifyPropertyChanged
     {
         private ILauncherUseCase useCase;
 
@@ -18,31 +18,25 @@
          */
         private WeakReference<ILauncherViewModelObserver> observerRef;
 
-        private List<ShortcutDirectory> directories = new List<ShortcutDirectory>();
-        private List<ShortcutDirectory> Directories
+        private List<ShortcutDirectory> shortcutDirectories = new List<ShortcutDirectory>();
+        public List<ShortcutDirectory> ShortcutDirectories
         {
-            get => directories;
+            get => shortcutDirectories;
             set
             {
-                directories = value;
-                if (observerRef.TryGetTarget(out var observer))
-                {
-                    observer.OnShortcutDirectoriesUpdated(directories);
-                }
+                shortcutDirectories = value;
+                NotifyPropertyChanged(nameof(ShortcutDirectories));
             }
         }
 
-        public WindowLayout windowLayout = Config.DEFAULT.Layout;
-        public WindowLayout WindowLayout
+        public WindowBound windowBound = new WindowBound();
+        public WindowBound WindowBound
         {
-            get => windowLayout;
+            get => windowBound;
             set
             {
-                windowLayout = value;
-                if (observerRef.TryGetTarget(out var observer))
-                {
-                    observer.OnWindowLayoutConfigUpdated(windowLayout);
-                }
+                windowBound = value;
+                NotifyPropertyChanged(nameof(WindowBound));
             }
         }
 
@@ -53,10 +47,7 @@
             set
             {
                 theme = value;
-                if (observerRef.TryGetTarget(out var observer))
-                {
-                    observer.OnThemeConfigUpdated(theme);
-                }
+                NotifyPropertyChanged(nameof(Theme));
             }
         }
 
@@ -76,9 +67,10 @@
         {
             try
             {
-                var config = useCase.Initialize().Get();
-                WindowLayout = config.Layout;
-                Theme = config.Theme;
+                var source = useCase.Initialize().Get();
+                ShortcutDirectories = source.ShortcutDirectories;
+                WindowBound = source.WindowBound;
+                Theme = source.Theme;
             }
             catch (Exception ex)
             {
@@ -87,11 +79,6 @@
                     observer.OnShowableErrorReceived($"Failed to initialize app: {ex.Message}");
                 }
             }
-        }
-
-        public void RetrieveLauncherDataSource()
-        {
-            Directories = useCase.RetrieveLauncherDataSource();
         }
 
         public void LaunchApplication(ShortcutListItem item)
@@ -107,6 +94,17 @@
                     observer.OnShowableErrorReceived($"Failed to start shortcut: {ex.Message}");
                 }
             }
+        }
+
+        public void ResumeWindow()
+        {
+            WindowBound = useCase.ResumeWindow();
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

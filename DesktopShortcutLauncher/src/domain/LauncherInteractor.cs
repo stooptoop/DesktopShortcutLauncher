@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using DesktopShortcutLauncher.src.models;
 
 namespace DesktopShortcutLauncher
 {
@@ -9,22 +10,20 @@ namespace DesktopShortcutLauncher
 
         public LauncherInteractor() : this(new LauncherRepository()) { }
 
-        public Result<Config> Initialize()
+        public Result<LauncherDataSource> Initialize()
         {
             try
             {
-                launcherRepository.LoadConfig();
-                return new Result<Config>.Success(launcherRepository.LauncherConfig);
+                var config = launcherRepository.LoadConfig().Get();
+                var directories = launcherRepository.RetrieveLauncherDataSource();
+                var bound = new WindowBound(config.Layout, launcherRepository.GetScreenHeight());
+                return new Result<LauncherDataSource>.Success(
+                    new LauncherDataSource(directories, bound, config.Theme));
             }
             catch (Exception ex)
             {
-                return new Result<Config>.Failure(ex);
+                return new Result<LauncherDataSource>.Failure(ex);
             }
-        }
-
-        public List<ShortcutDirectory> RetrieveLauncherDataSource()
-        {
-            return launcherRepository.RetrieveLauncherDataSource();
         }
 
         public Result<Empty> LaunchApplication(ShortcutListItem item)
@@ -41,6 +40,11 @@ namespace DesktopShortcutLauncher
             {
                 return new Result<Empty>.Failure(ex);
             }
+        }
+
+        public WindowBound ResumeWindow()
+        {
+            return new WindowBound(launcherRepository.LauncherConfig.Layout, launcherRepository.GetScreenHeight());
         }
     }
 }

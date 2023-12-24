@@ -4,7 +4,8 @@
     {
         public Config LauncherConfig { get; }
 
-        public Result<Empty> LoadConfig();
+        public Result<Config> LoadConfig();
         public List<ShortcutDirectory> RetrieveLauncherDataSource();
+        public double GetScreenHeight();
     }
 }
