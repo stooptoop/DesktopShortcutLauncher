@@ -1,6 +1,4 @@
-﻿using DesktopShortcutLauncher.src.models;
-
-namespace DesktopShortcutLauncher
+﻿namespace DesktopShortcutLauncher
 {
     public interface ILauncherUseCase
     {

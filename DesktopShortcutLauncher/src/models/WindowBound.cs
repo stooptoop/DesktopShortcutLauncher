@@ -1,4 +1,4 @@
-﻿namespace DesktopShortcutLauncher.src.models
+﻿namespace DesktopShortcutLauncher
 {
     public class WindowBound
     {

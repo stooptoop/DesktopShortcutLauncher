@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using DesktopShortcutLauncher.src.presentation.viewmodels;
 
 namespace DesktopShortcutLauncher
 {

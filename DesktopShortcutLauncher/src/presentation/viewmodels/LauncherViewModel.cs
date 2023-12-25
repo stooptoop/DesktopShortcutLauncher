@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
-using DesktopShortcutLauncher.src.models;
 
-namespace DesktopShortcutLauncher.src.presentation.viewmodels
+namespace DesktopShortcutLauncher
 {
     public interface ILauncherViewModelObserver
     {
