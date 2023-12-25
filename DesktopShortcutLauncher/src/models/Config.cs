@@ -37,11 +37,6 @@
         public double HeightRatio { get; } = 0.5;
     }
 
-    public partial class  Config
-    {
-        public static readonly Config DEFAULT = new Config();
-    }
-
     public class Theme
     {
         public Theme(
@@ -72,5 +67,10 @@
         public string OnTabBackground { get; } = "#FFF8F8F8";
         public string SelectedTabBackground { get; } = "#FF000000";
         public string OnSelectedTabBackground { get; } = "#FFF8F8F8";
+    }
+
+    public partial class Config
+    {
+        public static readonly Config DEFAULT = new Config();
     }
 }

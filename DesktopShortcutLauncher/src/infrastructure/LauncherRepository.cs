@@ -10,16 +10,13 @@ namespace DesktopShortcutLauncher
         private IConfigLoader LauncherConfigLoader = LauncherConfigLoader;
 
         private Config launcherConfig = Config.DEFAULT;
-        public Config LauncherConfig {
-            get => launcherConfig;
-            set => launcherConfig = value;
-        }
+        public Config LauncherConfig { get => launcherConfig; }
 
         public LauncherRepository() : this(new ConfigLoader()) {}
 
         public List<ShortcutDirectory> RetrieveLauncherDataSource()
         {
-            return CreateResources(LauncherConfig.DirectoryPaths);
+            return CreateResources(launcherConfig.DirectoryPaths);
         }
 
         public Result<Config> LoadConfig()

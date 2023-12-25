@@ -28,7 +28,7 @@ namespace DesktopShortcutLauncher
             }
         }
 
-        public WindowBound windowBound = new WindowBound();
+        private WindowBound windowBound = new WindowBound();
         public WindowBound WindowBound
         {
             get => windowBound;
@@ -39,7 +39,7 @@ namespace DesktopShortcutLauncher
             }
         }
 
-        public Theme theme = Config.DEFAULT.Theme;
+        private Theme theme = Config.DEFAULT.Theme;
         public Theme Theme
         {
             get => theme;
